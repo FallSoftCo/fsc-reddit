@@ -1,47 +1,30 @@
-import { prisma } from '@/lib/prisma'
+'use client'
 
-async function getStats() {
-  try {
-    const [
-      totalVideos,
-      totalAnalyses, 
-      totalRedditPosts,
-      recentPosts,
-      pendingPosts
-    ] = await Promise.all([
-      prisma.video.count(),
-      prisma.analysis.count(),
-      prisma.redditPost.count(),
-      prisma.redditPost.count({
-        where: { 
-          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-          status: 'POSTED'
-        }
-      }),
-      prisma.redditPost.count({ where: { status: 'PENDING' } })
-    ])
+import { useState, useEffect } from 'react'
 
-    return {
-      totalVideos,
-      totalAnalyses,
-      totalRedditPosts,
-      recentPosts,
-      pendingPosts
-    }
-  } catch (error) {
-    console.error('Failed to fetch stats:', error)
-    return {
-      totalVideos: 0,
-      totalAnalyses: 0, 
-      totalRedditPosts: 0,
-      recentPosts: 0,
-      pendingPosts: 0
-    }
-  }
+interface Stats {
+  totalVideos: number
+  totalAnalyses: number
+  totalRedditPosts: number
+  recentPosts: number
+  pendingPosts: number
 }
 
-export default async function Dashboard() {
-  const stats = await getStats()
+export default function Dashboard() {
+  const [stats, setStats] = useState<Stats>({
+    totalVideos: 0,
+    totalAnalyses: 0,
+    totalRedditPosts: 0,
+    recentPosts: 0,
+    pendingPosts: 0
+  })
+
+  useEffect(() => {
+    fetch('/api/dashboard')
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(err => console.error('Failed to fetch stats:', err))
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -129,13 +112,13 @@ export default async function Dashboard() {
             </div>
             <div className="p-6 space-y-4">
               <button
-                onClick="window.open('/api/cron/discover', '_blank')"
+                onClick={() => window.open('/api/cron/discover', '_blank')}
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
                 🔍 Trigger Discovery Now
               </button>
               <button
-                onClick="window.open('/api/cron/process', '_blank')"
+                onClick={() => window.open('/api/cron/process', '_blank')}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
               >
                 🤖 Trigger Processing Now
