@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { GoogleGenAI } from '@google/genai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 interface AnalysisResult {
   tldr: string
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
         console.log(`🤖 Analyzing video: ${video.title}`)
         
         // Initialize Gemini AI
-        const genai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
+        const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
         
         // Generate analysis
         const analysis = await analyzeVideo(genai, video)
@@ -172,7 +172,7 @@ export async function GET(request: Request) {
   }
 }
 
-async function analyzeVideo(genai: GoogleGenAI, video: {
+async function analyzeVideo(genai: GoogleGenerativeAI, video: {
   id: string
   youtubeId: string
   title: string
@@ -265,15 +265,16 @@ Respond with a JSON object with this structure:
   ]
 }`
 
-  const response = await genai.models.generateContent({
+  const model = genai.getGenerativeModel({
     model: 'gemini-2.0-flash-001',
-    contents: prompt,
-    config: {
+    generationConfig: {
       responseMimeType: "application/json"
     }
   })
   
-  const responseText = response.text
+  const response = await model.generateContent(prompt)
+  
+  const responseText = response.response.text()
   if (!responseText) {
     throw new Error('Empty response from Gemini API')
   }

@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 interface VideoData {
   youtubeId: string
@@ -21,14 +21,14 @@ export interface AnalysisResult {
 }
 
 export class VideoAnalyzer {
-  private genai: GoogleGenAI
+  private genai: GoogleGenerativeAI
 
   constructor() {
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY is required')
     }
-    this.genai = new GoogleGenAI({ apiKey })
+    this.genai = new GoogleGenerativeAI(apiKey)
   }
 
   async analyzeVideo(video: VideoData): Promise<AnalysisResult> {
@@ -115,15 +115,16 @@ Respond with a JSON object with this structure:
   ]
 }`
 
-      const response = await this.genai.models.generateContent({
+      const model = this.genai.getGenerativeModel({
         model: 'gemini-2.0-flash-001',
-        contents: prompt,
-        config: {
+        generationConfig: {
           responseMimeType: "application/json"
         }
       })
       
-      const responseText = response.text
+      const response = await model.generateContent(prompt)
+      
+      const responseText = response.response.text()
       if (!responseText) {
         throw new Error('Empty response from Gemini API')
       }
