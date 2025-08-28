@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Video {
+  id                   String      @id @default(cuid())
+  youtubeId            String      @unique @map("youtube_id")
+  title                String
+  description          String?
+  channelId            String      @map("channel_id")
+  channelTitle         String      @map("channel_title")
+  publishedAt          DateTime    @map("published_at")
+  duration             String
+  tags                 String[]
+  categoryId           String?     @map("category_id")
+  viewCount            BigInt?     @map("view_count")
+  likeCount            BigInt?     @map("like_count")
+  commentCount         BigInt?     @map("comment_count")
+  region               String      @default("US")
+  createdAt            DateTime    @default(now()) @map("created_at")
+  updatedAt            DateTime    @updatedAt @map("updated_at")
+  
+  analyses             Analysis[]
+  redditPosts          RedditPost[]
+
+  @@map("videos")
+}
+
+model Analysis {
+  id                    String     @id @default(cuid())
+  videoId               String     @map("video_id")
+  summary               String
+  tldr                  String
+  timestampSeconds      Int[]      @map("timestamp_seconds")
+  timestampDescriptions String[]   @map("timestamp_descriptions")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @updatedAt @map("updated_at")
+  
+  video                 Video      @relation(fields: [videoId], references: [id])
+  redditPosts           RedditPost[]
+
+  @@map("analyses")
+}
+
+model RedditPost {
+  id           String         @id @default(cuid())
+  videoId      String         @map("video_id")
+  analysisId   String         @map("analysis_id")
+  redditId     String?        @unique @map("reddit_id")
+  title        String
+  content      String
+  url          String
+  status       RedditStatus   @default(PENDING)
+  errorMessage String?        @map("error_message")
+  postedAt     DateTime?      @map("posted_at")
+  upvotes      Int?
+  downvotes    Int?
+  comments     Int?
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  
+  video        Video          @relation(fields: [videoId], references: [id])
+  analysis     Analysis       @relation(fields: [analysisId], references: [id])
+
+  @@map("reddit_posts")
+}
+
+enum RedditStatus {
+  PENDING
+  POSTING
+  POSTED
+  PARTIAL
+  FAILED
+}
