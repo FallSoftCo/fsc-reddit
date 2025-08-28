@@ -107,7 +107,7 @@ export default async function Dashboard() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Processing Cron</span>
                 <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                  Every 90 minutes
+                  Every 5 minutes
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -120,6 +120,29 @@ export default async function Dashboard() {
                   r/tlyt
                 </a>
               </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Manual Controls</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <button
+                onClick="window.open('/api/cron/discover', '_blank')"
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+              >
+                🔍 Trigger Discovery Now
+              </button>
+              <button
+                onClick="window.open('/api/cron/process', '_blank')"
+                className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+              >
+                🤖 Trigger Processing Now
+              </button>
+              <p className="text-xs text-gray-500">
+                Discovery finds new trending videos. Processing analyzes and posts to Reddit.
+              </p>
             </div>
           </div>
 
