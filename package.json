@@ -1,6 +1,7 @@
 {
-  "name": "fsc-reddit",
-  "version": "0.1.0",
+  "name": "tlyt-reddit-bot",
+  "version": "1.0.0",
+  "description": "Autonomous Reddit bot for r/tlyt - AI-powered video analysis and posting",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",

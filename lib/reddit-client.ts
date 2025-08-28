@@ -183,7 +183,7 @@ export function createRedditClient(): RedditClient {
     clientSecret: process.env.REDDIT_CLIENT_SECRET!,
     username: process.env.REDDIT_USERNAME!,
     password: process.env.REDDIT_PASSWORD!,
-    userAgent: `web:fsc-reddit:v1.0.0 (by u/${process.env.REDDIT_USERNAME})`,
+    userAgent: `web:tlyt-reddit-bot:v1.0.0 (by u/${process.env.REDDIT_USERNAME})`,
   };
 
   return new RedditClient(config);
