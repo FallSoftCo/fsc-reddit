@@ -103,29 +103,12 @@ export default function Dashboard() {
                   r/tlyt
                 </a>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Manual Controls</h3>
-            </div>
-            <div className="p-6 space-y-4">
-              <button
-                onClick={() => window.open('/api/cron/discover', '_blank')}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-              >
-                🔍 Trigger Discovery Now
-              </button>
-              <button
-                onClick={() => window.open('/api/cron/process', '_blank')}
-                className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-              >
-                🤖 Trigger Processing Now
-              </button>
-              <p className="text-xs text-gray-500">
-                Discovery finds new trending videos. Processing analyzes and posts to Reddit.
-              </p>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Manual Control</span>
+                <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-sm">
+                  Vercel Dashboard
+                </span>
+              </div>
             </div>
           </div>
 
@@ -139,6 +122,7 @@ export default function Dashboard() {
               <div>📮 <strong>Posting:</strong> Formats and posts analysis to r/tlyt subreddit</div>
               <div>🚫 <strong>Deduplication:</strong> Prevents duplicate video processing</div>
               <div>⚡ <strong>Automation:</strong> Fully autonomous with Vercel cron jobs</div>
+              <div>🎛️ <strong>Manual Trigger:</strong> Use Vercel Dashboard → Cron Jobs to start</div>
             </div>
           </div>
         </div>
